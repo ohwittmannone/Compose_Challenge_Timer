@@ -19,35 +19,44 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.example.composechallengetimer.CustomCountdownTimer
 import com.example.composechallengetimer.TimerViewModel
+import com.example.composechallengetimer.util.UNSET_TIME
+import com.example.composechallengetimer.util.getMillisecondsFromTimer
 
-private val playVisibility = mutableStateOf(false)
+private var playButtonVisibility = mutableStateOf(false)
+private val timerWithPadVisibility = mutableStateOf(true)
 
 @ExperimentalAnimationApi
 @Composable
-fun Timer(timerViewModel: TimerViewModel) {
+fun Timer(timerViewModel: TimerViewModel, customTimer: CustomCountdownTimer) {
     Scaffold(
         topBar = { TopBar() }
     ) {
-        Column(
-            modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp)
-                .fillMaxHeight()
-                .fillMaxWidth()
-        ) {
-            Column(Modifier.weight(4f)) {
-                TimeDisplay(timerViewModel)
-                Divider(thickness = 3.dp)
-                NumberPad(timerViewModel)
-            }
+        if (timerWithPadVisibility.value) {
             Column(
                 modifier = Modifier
-                    .weight(0.5f)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(start = 8.dp, end = 8.dp)
+                    .fillMaxHeight()
+                    .fillMaxWidth()
             ) {
-                PlayButton()
+                Column(Modifier.weight(4f)) {
+                    TimeDisplay(timerViewModel)
+                    Divider(thickness = 3.dp)
+                    NumberPad(timerViewModel)
+                }
+                Column(
+                    modifier = Modifier
+                        .weight(0.5f)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    PlayButton(timerViewModel, customTimer)
+                }
             }
+        }
+        if (!timerWithPadVisibility.value) {
+            Countdown(timerViewModel)
         }
     }
 }
@@ -85,7 +94,7 @@ private fun TimeDisplay(timerViewModel: TimerViewModel) {
         IconButton(
             onClick = {
                 timerViewModel.removeDigit()
-                playVisibility.value = timerViewModel.time.value != "00h 00m 00s"
+                playButtonVisibility.value = timerViewModel.time.value != UNSET_TIME
             },
             modifier = Modifier.constrainAs(button) {
                 top.linkTo(parent.top)
@@ -107,7 +116,7 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
             shape = RoundedCornerShape(8.dp),
             onClick = {
                 timerViewModel.addDigit(1)
-                playVisibility.value = !timerViewModel.time.equals("00h 00m 00s")
+                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
             }) {
             Text("1", fontSize = 30.sp)
         }
@@ -118,7 +127,7 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
             shape = RoundedCornerShape(8.dp),
             onClick = {
                 timerViewModel.addDigit(2)
-                playVisibility.value = !timerViewModel.time.equals("00h 00m 00s")
+                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
             }) {
             Text("2", fontSize = 30.sp)
         }
@@ -129,7 +138,7 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
             shape = RoundedCornerShape(8.dp),
             onClick = {
                 timerViewModel.addDigit(3)
-                playVisibility.value = !timerViewModel.time.equals("00h 00m 00s")
+                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
             }) {
             Text("3", fontSize = 30.sp)
         }
@@ -142,7 +151,7 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
             shape = RoundedCornerShape(8.dp),
             onClick = {
                 timerViewModel.addDigit(4)
-                playVisibility.value = !timerViewModel.time.equals("00h 00m 00s")
+                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
             }) {
             Text("4", fontSize = 30.sp)
         }
@@ -153,7 +162,7 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
             shape = RoundedCornerShape(8.dp),
             onClick = {
                 timerViewModel.addDigit(5)
-                playVisibility.value = !timerViewModel.time.equals("00h 00m 00s")
+                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
             }) {
             Text("5", fontSize = 30.sp)
         }
@@ -164,7 +173,7 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
             shape = RoundedCornerShape(8.dp),
             onClick = {
                 timerViewModel.addDigit(6)
-                playVisibility.value = !timerViewModel.time.equals("00h 00m 00s")
+                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
             }) {
             Text("6", fontSize = 30.sp)
         }
@@ -177,7 +186,7 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
             shape = RoundedCornerShape(8.dp),
             onClick = {
                 timerViewModel.addDigit(7)
-                playVisibility.value = !timerViewModel.time.equals("00h 00m 00s")
+                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
             }) {
             Text("7", fontSize = 30.sp)
         }
@@ -188,7 +197,7 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
             shape = RoundedCornerShape(8.dp),
             onClick = {
                 timerViewModel.addDigit(8)
-                playVisibility.value = !timerViewModel.time.equals("00h 00m 00s")
+                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
             }) {
             Text("8", fontSize = 30.sp)
         }
@@ -199,7 +208,7 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
             shape = RoundedCornerShape(8.dp),
             onClick = {
                 timerViewModel.addDigit(9)
-                playVisibility.value = !timerViewModel.time.equals("00h 00m 00s")
+                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
             }) {
             Text("9", fontSize = 30.sp)
         }
@@ -214,7 +223,7 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
             shape = RoundedCornerShape(8.dp),
             onClick = {
                 timerViewModel.addDigit(0)
-                playVisibility.value = !timerViewModel.time.equals("00h 00m 00s")
+                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
             }) {
             Text("0", fontSize = 30.sp)
         }
@@ -223,9 +232,9 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
 
 @ExperimentalAnimationApi
 @Composable
-private fun PlayButton() {
+private fun PlayButton(timerViewModel: TimerViewModel, customTimer: CustomCountdownTimer) {
     AnimatedVisibility(
-        visible = playVisibility.value,
+        visible = playButtonVisibility.value,
         enter = slideInVertically(initialOffsetY = { 30 }) + fadeIn(initialAlpha = 0.3f),
         exit = slideOutVertically(targetOffsetY = { 30 }) + fadeOut()
     ) {
@@ -235,7 +244,12 @@ private fun PlayButton() {
             modifier = Modifier
                 .background(color = MaterialTheme.colors.secondary, shape = CircleShape)
                 .clip(CircleShape)
-                .clickable { /*TODO*/ }
+                .clickable {
+                    timerViewModel.totalTime.value = getMillisecondsFromTimer(timerViewModel.time.value)
+                    customTimer.start()
+                    timerWithPadVisibility.value = false
+                    timerViewModel.isTimerRunning.value = true
+                }
                 .padding(12.dp)
         )
     }

@@ -8,6 +8,7 @@ class TimerViewModel : ViewModel() {
     val time = mutableStateOf("00h 00m 00s")
     val totalTime = mutableStateOf(0L)
     val timeRemaining = mutableStateOf(0L)
+    val isTimerRunning = mutableStateOf(false)
 
     init {
         time.value = "00h 00m 00s"
@@ -118,5 +119,7 @@ class TimerViewModel : ViewModel() {
                 time.value = time.value.replaceFirstDigitOfHour("0")
             }
         }
+        totalTime.value = getMillisecondsFromTimer(time.value)
+        timeRemaining.value = getMillisecondsFromTimer(time.value)
     }
 }

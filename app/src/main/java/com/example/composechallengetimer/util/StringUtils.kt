@@ -3,6 +3,8 @@ package com.example.composechallengetimer.util
 
 import java.util.concurrent.TimeUnit
 
+const val UNSET_TIME = "00h 00m 00s"
+
 //00h 00m 00s
 fun String.getSecond() = substring(8, 10)
 fun String.getMinute() = substring(4, 6)
@@ -21,6 +23,20 @@ fun String.replaceFirstDigitOfMinute(number: String) = replaceRange(startIndex =
 fun String.replaceSecondDigitOfMinute(number: String) = replaceRange(startIndex = 5, endIndex = 6, number)
 fun String.replaceFirstDigitOfHour(number: String) = replaceRange(startIndex = 0, endIndex = 1, number)
 fun String.replaceSecondDigitOfHour(number: String) = replaceRange(startIndex = 1, endIndex = 2, number)
+
+fun getFormattedTimer(timeMilliseconds: Long): String {
+    val seconds = (timeMilliseconds / 1000) % 60
+    val minutes = ((timeMilliseconds / 1000) / 60) % 60
+    val hours = ((timeMilliseconds / 1000) / 60) / 60
+    if (seconds <= 0L && minutes <= 0L && hours <= 0L) {
+        return "0"
+    }
+    return when {
+        hours == 0L && minutes == 0L -> "%02ds".format(seconds)
+        hours == 0L -> "%02dm %02ds".format(minutes, seconds)
+        else -> "%02dh %02dm %02ds".format(hours, minutes, seconds)
+    }
+}
 
 fun getMillisecondsFromTimer(time: String) = TimeUnit.SECONDS.toMillis(time.getSecond().toLong()) +
         TimeUnit.MINUTES.toMillis(time.getMinute().toLong()) +
