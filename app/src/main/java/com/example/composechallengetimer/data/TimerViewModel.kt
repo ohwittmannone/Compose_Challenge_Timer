@@ -124,4 +124,13 @@ class TimerViewModel : ViewModel() {
         totalTime.value = getMillisecondsFromTimer(time.value)
         timeRemaining.value = getMillisecondsFromTimer(time.value)
     }
+
+    fun reset() {
+        time.value = "00h 00m 00s"
+        totalTime.value = 0L
+        timeRemaining.value = 0L
+        isTimerRunning.value = false
+        playButtonVisibility.value = false
+        timerWithPadVisibility.value = true
+    }
 }

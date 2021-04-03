@@ -5,14 +5,12 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
@@ -49,9 +47,12 @@ fun Countdown(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 16.dp), contentAlignment = Alignment.BottomCenter
+                .padding(bottom = 64.dp), contentAlignment = Alignment.BottomCenter
         ) {
-            PlayPauseButton(model)
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                Column(Modifier.padding(24.dp)) { PlayPauseButton(model) }
+                Column(Modifier.padding(24.dp)) { DeleteButton(model) }
+            }
             OkButton(model)
         }
     }
@@ -136,6 +137,21 @@ private fun PlayPauseButton(model: TimerViewModel) {
                 .background(color = MaterialTheme.colors.secondary, shape = CircleShape)
                 .clip(CircleShape)
                 .clickable { model.isTimerRunning.value = !model.isTimerRunning.value }
+                .padding(12.dp)
+        )
+    }
+}
+
+@Composable
+private fun DeleteButton(model: TimerViewModel) {
+    if (model.timeRemaining.value != 0L) {
+        Icon(
+            imageVector = Icons.Filled.Delete,
+            contentDescription = null,
+            Modifier
+                .background(color = MaterialTheme.colors.secondary, shape = CircleShape)
+                .clip(CircleShape)
+                .clickable { model.reset() }
                 .padding(12.dp)
         )
     }
