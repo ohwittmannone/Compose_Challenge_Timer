@@ -3,20 +3,24 @@ package com.example.composechallengetimer.ui.screens
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composechallengetimer.data.TimerViewModel
@@ -28,23 +32,27 @@ private const val ONE_SECOND = 1000
 
 @Composable
 fun Countdown(
-    timerViewModel: TimerViewModel, ) {
+    model: TimerViewModel,
+) {
     val percentageDone =
-        max(timerViewModel.timeRemaining.value.toFloat() - ONE_SECOND, 0f) / timerViewModel.totalTime.value
+        max(model.timeRemaining.value.toFloat() - ONE_SECOND, 0f) / model.totalTime.value
     val progress by animateFloatAsState(
         targetValue = percentageDone,
         animationSpec = tween(durationMillis = ONE_SECOND, easing = LinearEasing)
     )
 
-    VisualLogic(timerViewModel)
+    VisualLogic(model)
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
         LoadingSpinners(progress)
-        CountdownText(timerViewModel)
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 16.dp), contentAlignment = Alignment.BottomCenter) {
-            OkButton(timerViewModel)
+        CountdownText(model)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 16.dp), contentAlignment = Alignment.BottomCenter
+        ) {
+            PlayPauseButton(model)
+            OkButton(model)
         }
     }
 }
@@ -107,13 +115,28 @@ private fun LoadingSpinners(progress: Float) {
 }
 
 @Composable
-private fun OkButton(timerViewModel: TimerViewModel) {
-    if (!timerViewModel.isTimerRunning.value) {
+private fun OkButton(model: TimerViewModel) {
+    if (!model.isTimerRunning.value && model.timeRemaining.value == 0L) {
         Button(onClick = {
-            timerViewModel.timerWithPadVisibility.value = true
-            timerViewModel.playButtonVisibility.value = false
+            model.timerWithPadVisibility.value = true
+            model.playButtonVisibility.value = false
         }, shape = RoundedCornerShape(8.dp)) {
             Text(text = "OK", fontSize = 30.sp)
         }
+    }
+}
+
+@Composable
+private fun PlayPauseButton(model: TimerViewModel) {
+    if (model.timeRemaining.value != 0L) {
+        Icon(
+            imageVector = if (model.isTimerRunning.value) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+            contentDescription = null,
+            modifier = Modifier
+                .background(color = MaterialTheme.colors.secondary, shape = CircleShape)
+                .clip(CircleShape)
+                .clickable { model.isTimerRunning.value = !model.isTimerRunning.value }
+                .padding(12.dp)
+        )
     }
 }
