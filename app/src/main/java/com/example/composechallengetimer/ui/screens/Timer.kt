@@ -1,4 +1,4 @@
-package com.example.composechallengetimer.ui
+package com.example.composechallengetimer.ui.screens
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
@@ -19,8 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.composechallengetimer.CustomCountdownTimer
 import com.example.composechallengetimer.data.TimerViewModel
+import com.example.composechallengetimer.ui.CustomCountdownTimer
 import com.example.composechallengetimer.util.UNSET_TIME
 import com.example.composechallengetimer.util.getMillisecondsFromTimer
 

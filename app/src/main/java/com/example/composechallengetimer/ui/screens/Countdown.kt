@@ -1,4 +1,4 @@
-package com.example.composechallengetimer.ui
+package com.example.composechallengetimer.ui.screens
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState

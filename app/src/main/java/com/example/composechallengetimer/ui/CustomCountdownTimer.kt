@@ -1,4 +1,4 @@
-package com.example.composechallengetimer
+package com.example.composechallengetimer.ui
 
 import android.os.CountDownTimer
 import com.example.composechallengetimer.data.TimerViewModel
