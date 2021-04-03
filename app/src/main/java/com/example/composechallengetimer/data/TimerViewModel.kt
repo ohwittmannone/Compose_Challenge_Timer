@@ -9,6 +9,8 @@ class TimerViewModel : ViewModel() {
     val totalTime = mutableStateOf(0L)
     val timeRemaining = mutableStateOf(0L)
     val isTimerRunning = mutableStateOf(false)
+    val playButtonVisibility = mutableStateOf(false)
+    val timerWithPadVisibility = mutableStateOf(true)
 
     init {
         time.value = "00h 00m 00s"

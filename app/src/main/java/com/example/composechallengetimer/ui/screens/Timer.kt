@@ -11,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Backspace
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,16 +23,11 @@ import com.example.composechallengetimer.ui.CustomCountdownTimer
 import com.example.composechallengetimer.util.UNSET_TIME
 import com.example.composechallengetimer.util.getMillisecondsFromTimer
 
-private var playButtonVisibility = mutableStateOf(false)
-private val timerWithPadVisibility = mutableStateOf(true)
-
 @ExperimentalAnimationApi
 @Composable
-fun Timer(timerViewModel: TimerViewModel, customTimer: CustomCountdownTimer) {
-    Scaffold(
-        topBar = { TopBar() }
-    ) {
-        if (timerWithPadVisibility.value) {
+fun Timer(model: TimerViewModel, customTimer: CustomCountdownTimer) {
+    Scaffold(topBar = { TopBar() }) {
+        if (model.timerWithPadVisibility.value) {
             Column(
                 modifier = Modifier
                     .padding(start = 8.dp, end = 8.dp)
@@ -41,9 +35,9 @@ fun Timer(timerViewModel: TimerViewModel, customTimer: CustomCountdownTimer) {
                     .fillMaxWidth()
             ) {
                 Column(Modifier.weight(4f)) {
-                    TimeDisplay(timerViewModel)
+                    TimeDisplay(model)
                     Divider(thickness = 3.dp)
-                    NumberPad(timerViewModel)
+                    NumberPad(model)
                 }
                 Column(
                     modifier = Modifier
@@ -51,13 +45,11 @@ fun Timer(timerViewModel: TimerViewModel, customTimer: CustomCountdownTimer) {
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    PlayButton(timerViewModel, customTimer)
+                    PlayButton(model, customTimer)
                 }
             }
         }
-        if (!timerWithPadVisibility.value) {
-            Countdown(timerViewModel, timerWithPadVisibility, playButtonVisibility)
-        }
+        if (!model.timerWithPadVisibility.value) Countdown(model)
     }
 }
 
@@ -77,7 +69,7 @@ private fun TopBar() {
 }
 
 @Composable
-private fun TimeDisplay(timerViewModel: TimerViewModel) {
+private fun TimeDisplay(model: TimerViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
@@ -85,7 +77,7 @@ private fun TimeDisplay(timerViewModel: TimerViewModel) {
     ) {
         val (text, button) = createRefs()
         Text(
-            text = timerViewModel.time.value,
+            text = model.time.value,
             fontSize = 40.sp,
             modifier = Modifier.constrainAs(text) {
                 start.linkTo(parent.start)
@@ -93,8 +85,8 @@ private fun TimeDisplay(timerViewModel: TimerViewModel) {
             })
         IconButton(
             onClick = {
-                timerViewModel.removeDigit()
-                playButtonVisibility.value = timerViewModel.time.value != UNSET_TIME
+                model.removeDigit()
+                model.playButtonVisibility.value = model.time.value != UNSET_TIME
             },
             modifier = Modifier.constrainAs(button) {
                 top.linkTo(parent.top)
@@ -107,7 +99,7 @@ private fun TimeDisplay(timerViewModel: TimerViewModel) {
 }
 
 @Composable
-private fun NumberPad(timerViewModel: TimerViewModel) {
+private fun NumberPad(model: TimerViewModel) {
     Row(modifier = Modifier.padding(top = 32.dp, bottom = 8.dp)) {
         Button(
             modifier = Modifier
@@ -115,8 +107,8 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
                 .padding(start = 8.dp, end = 8.dp),
             shape = RoundedCornerShape(8.dp),
             onClick = {
-                timerViewModel.addDigit(1)
-                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
+                model.addDigit(1)
+                model.playButtonVisibility.value = !model.time.equals(UNSET_TIME)
             }) {
             Text("1", fontSize = 30.sp)
         }
@@ -126,8 +118,8 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
                 .padding(start = 8.dp, end = 8.dp),
             shape = RoundedCornerShape(8.dp),
             onClick = {
-                timerViewModel.addDigit(2)
-                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
+                model.addDigit(2)
+                model.playButtonVisibility.value = !model.time.equals(UNSET_TIME)
             }) {
             Text("2", fontSize = 30.sp)
         }
@@ -137,8 +129,8 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
                 .padding(start = 8.dp, end = 8.dp),
             shape = RoundedCornerShape(8.dp),
             onClick = {
-                timerViewModel.addDigit(3)
-                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
+                model.addDigit(3)
+                model.playButtonVisibility.value = !model.time.equals(UNSET_TIME)
             }) {
             Text("3", fontSize = 30.sp)
         }
@@ -150,8 +142,8 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
                 .padding(start = 8.dp, end = 8.dp),
             shape = RoundedCornerShape(8.dp),
             onClick = {
-                timerViewModel.addDigit(4)
-                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
+                model.addDigit(4)
+                model.playButtonVisibility.value = !model.time.equals(UNSET_TIME)
             }) {
             Text("4", fontSize = 30.sp)
         }
@@ -161,8 +153,8 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
                 .padding(start = 8.dp, end = 8.dp),
             shape = RoundedCornerShape(8.dp),
             onClick = {
-                timerViewModel.addDigit(5)
-                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
+                model.addDigit(5)
+                model.playButtonVisibility.value = !model.time.equals(UNSET_TIME)
             }) {
             Text("5", fontSize = 30.sp)
         }
@@ -172,8 +164,8 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
                 .padding(start = 8.dp, end = 8.dp),
             shape = RoundedCornerShape(8.dp),
             onClick = {
-                timerViewModel.addDigit(6)
-                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
+                model.addDigit(6)
+                model.playButtonVisibility.value = !model.time.equals(UNSET_TIME)
             }) {
             Text("6", fontSize = 30.sp)
         }
@@ -185,8 +177,8 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
                 .padding(start = 8.dp, end = 8.dp),
             shape = RoundedCornerShape(8.dp),
             onClick = {
-                timerViewModel.addDigit(7)
-                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
+                model.addDigit(7)
+                model.playButtonVisibility.value = !model.time.equals(UNSET_TIME)
             }) {
             Text("7", fontSize = 30.sp)
         }
@@ -196,8 +188,8 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
                 .padding(start = 8.dp, end = 8.dp),
             shape = RoundedCornerShape(8.dp),
             onClick = {
-                timerViewModel.addDigit(8)
-                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
+                model.addDigit(8)
+                model.playButtonVisibility.value = !model.time.equals(UNSET_TIME)
             }) {
             Text("8", fontSize = 30.sp)
         }
@@ -207,8 +199,8 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
                 .padding(start = 8.dp, end = 8.dp),
             shape = RoundedCornerShape(8.dp),
             onClick = {
-                timerViewModel.addDigit(9)
-                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
+                model.addDigit(9)
+                model.playButtonVisibility.value = !model.time.equals(UNSET_TIME)
             }) {
             Text("9", fontSize = 30.sp)
         }
@@ -222,8 +214,8 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
         Button(
             shape = RoundedCornerShape(8.dp),
             onClick = {
-                timerViewModel.addDigit(0)
-                playButtonVisibility.value = !timerViewModel.time.equals(UNSET_TIME)
+                model.addDigit(0)
+                model.playButtonVisibility.value = !model.time.equals(UNSET_TIME)
             }) {
             Text("0", fontSize = 30.sp)
         }
@@ -232,9 +224,9 @@ private fun NumberPad(timerViewModel: TimerViewModel) {
 
 @ExperimentalAnimationApi
 @Composable
-private fun PlayButton(timerViewModel: TimerViewModel, customTimer: CustomCountdownTimer) {
+private fun PlayButton(model: TimerViewModel, customTimer: CustomCountdownTimer) {
     AnimatedVisibility(
-        visible = playButtonVisibility.value,
+        visible = model.playButtonVisibility.value,
         enter = slideInVertically(initialOffsetY = { 30 }) + fadeIn(initialAlpha = 0.3f),
         exit = slideOutVertically(targetOffsetY = { 30 }) + fadeOut()
     ) {
@@ -245,10 +237,10 @@ private fun PlayButton(timerViewModel: TimerViewModel, customTimer: CustomCountd
                 .background(color = MaterialTheme.colors.secondary, shape = CircleShape)
                 .clip(CircleShape)
                 .clickable {
-                    timerViewModel.totalTime.value = getMillisecondsFromTimer(timerViewModel.time.value)
+                    model.totalTime.value = getMillisecondsFromTimer(model.time.value)
                     customTimer.start()
-                    timerWithPadVisibility.value = false
-                    timerViewModel.isTimerRunning.value = true
+                    model.timerWithPadVisibility.value = false
+                    model.isTimerRunning.value = true
                 }
                 .padding(12.dp)
         )

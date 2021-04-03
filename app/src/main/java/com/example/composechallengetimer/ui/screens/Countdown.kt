@@ -14,7 +14,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,10 +28,7 @@ private const val ONE_SECOND = 1000
 
 @Composable
 fun Countdown(
-    timerViewModel: TimerViewModel,
-    timerWithPadVisibility: MutableState<Boolean>,
-    playButtonVisibility: MutableState<Boolean>
-) {
+    timerViewModel: TimerViewModel, ) {
     val percentageDone =
         max(timerViewModel.timeRemaining.value.toFloat() - ONE_SECOND, 0f) / timerViewModel.totalTime.value
     val progress by animateFloatAsState(
@@ -48,7 +44,7 @@ fun Countdown(
         Box(modifier = Modifier
             .fillMaxSize()
             .padding(bottom = 16.dp), contentAlignment = Alignment.BottomCenter) {
-            OkButton(timerViewModel, timerWithPadVisibility, playButtonVisibility)
+            OkButton(timerViewModel)
         }
     }
 }
@@ -111,15 +107,11 @@ private fun LoadingSpinners(progress: Float) {
 }
 
 @Composable
-private fun OkButton(
-    timerViewModel: TimerViewModel,
-    timerWithPadVisibility: MutableState<Boolean>,
-    playButtonVisibility: MutableState<Boolean>
-) {
+private fun OkButton(timerViewModel: TimerViewModel) {
     if (!timerViewModel.isTimerRunning.value) {
         Button(onClick = {
-            timerWithPadVisibility.value = true
-            playButtonVisibility.value = false
+            timerViewModel.timerWithPadVisibility.value = true
+            timerViewModel.playButtonVisibility.value = false
         }, shape = RoundedCornerShape(8.dp)) {
             Text(text = "OK", fontSize = 30.sp)
         }
