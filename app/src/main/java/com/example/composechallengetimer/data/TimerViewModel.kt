@@ -1,4 +1,4 @@
-package com.example.composechallengetimer
+package com.example.composechallengetimer.data
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

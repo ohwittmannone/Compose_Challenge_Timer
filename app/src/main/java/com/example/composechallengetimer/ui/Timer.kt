@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.composechallengetimer.CustomCountdownTimer
-import com.example.composechallengetimer.TimerViewModel
+import com.example.composechallengetimer.data.TimerViewModel
 import com.example.composechallengetimer.util.UNSET_TIME
 import com.example.composechallengetimer.util.getMillisecondsFromTimer
 

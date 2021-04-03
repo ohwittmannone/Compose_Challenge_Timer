@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import com.example.composechallengetimer.data.TimerViewModel
 import com.example.composechallengetimer.ui.Timer
 import com.example.composechallengetimer.ui.theme.ComposeChallengeTimerTheme
 
