@@ -56,7 +56,7 @@ fun Timer(timerViewModel: TimerViewModel, customTimer: CustomCountdownTimer) {
             }
         }
         if (!timerWithPadVisibility.value) {
-            Countdown(timerViewModel)
+            Countdown(timerViewModel, timerWithPadVisibility, playButtonVisibility)
         }
     }
 }
