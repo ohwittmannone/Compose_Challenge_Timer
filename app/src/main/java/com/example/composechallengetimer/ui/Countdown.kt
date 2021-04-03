@@ -33,69 +33,80 @@ fun Countdown(
     timerWithPadVisibility: MutableState<Boolean>,
     playButtonVisibility: MutableState<Boolean>
 ) {
-    if (timerViewModel.isTimerRunning.value) {
+    val percentageDone =
+        max(timerViewModel.timeRemaining.value.toFloat() - ONE_SECOND, 0f) / timerViewModel.totalTime.value
+    val progress by animateFloatAsState(
+        targetValue = percentageDone,
+        animationSpec = tween(durationMillis = ONE_SECOND, easing = LinearEasing)
+    )
+
+    VisualLogic(timerViewModel)
+
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+        LoadingSpinners(progress)
+        CountdownText(timerViewModel)
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 16.dp), contentAlignment = Alignment.BottomCenter) {
+            OkButton(timerViewModel, timerWithPadVisibility, playButtonVisibility)
+        }
+    }
+}
+
+@Composable
+fun VisualLogic(model: TimerViewModel) {
+    if (model.isTimerRunning.value) {
         LaunchedEffect("Timer") {
             while (isActive) {
                 delay(ONE_SECOND.toLong())
                 if (isActive) {
-                    if (timerViewModel.isTimerRunning.value) {
-                        timerViewModel.timeRemaining.value = timerViewModel.timeRemaining.value - ONE_SECOND
+                    if (model.isTimerRunning.value) {
+                        model.timeRemaining.value = model.timeRemaining.value - ONE_SECOND
                     }
-                    if (timerViewModel.timeRemaining.value == 0L) {
-                        timerViewModel.totalTime.value = 0
-                        timerViewModel.isTimerRunning.value = false
+                    if (model.timeRemaining.value == 0L) {
+                        model.totalTime.value = 0
+                        model.isTimerRunning.value = false
                     }
                 }
             }
         }
     }
+}
 
-    val percentageDone = max(
-        timerViewModel.timeRemaining.value.toFloat() - ONE_SECOND,
-        0f
-    ) / timerViewModel.totalTime.value
+@Composable
+private fun CountdownText(model: TimerViewModel) {
+    Box(Modifier.aspectRatio(1.85f), contentAlignment = Alignment.BottomCenter) {
+        Text(
+            text = if (model.timeRemaining.value != 0L) {
+                model.getFormattedTimer(model.timeRemaining.value)
+            } else {
+                "Time is up!"
+            },
+            fontSize = 20.sp
+        )
+    }
+}
 
-    val progress by animateFloatAsState(
-        targetValue = percentageDone,
-        animationSpec = tween(durationMillis = ONE_SECOND, easing = LinearEasing)
+@Composable
+private fun LoadingSpinners(progress: Float) {
+    CircularProgressIndicator(
+        progress = 1F,
+        color = MaterialTheme.colors.secondary,
+        modifier = Modifier
+            .padding(24.dp)
+            .fillMaxSize(),
+        strokeWidth = 8.dp
     )
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+    if (progress >= 0) {
         CircularProgressIndicator(
-            progress = 1F,
-            color = MaterialTheme.colors.secondary,
+            //this goes behind the first circle
+            progress = progress,
             modifier = Modifier
                 .padding(24.dp)
                 .fillMaxSize(),
-            strokeWidth = 8.dp
+            color = MaterialTheme.colors.onSecondary,
+            strokeWidth = 9.dp,
         )
-        if (progress >= 0) {
-            CircularProgressIndicator(
-                //this goes behind the first circle
-                progress = progress,
-                modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxSize(),
-                color = MaterialTheme.colors.onSecondary,
-                strokeWidth = 9.dp,
-            )
-        }
-        Box(Modifier.aspectRatio(1.85f), contentAlignment = Alignment.BottomCenter) {
-            Text(
-                text = if (timerViewModel.timeRemaining.value != 0L) {
-                    timerViewModel.getFormattedTimer(timerViewModel.timeRemaining.value)
-                } else {
-                    "Time is up!"
-                },
-                fontSize = 20.sp
-            )
-        }
-        Box(modifier = Modifier.fillMaxSize().padding(bottom = 16.dp), contentAlignment = Alignment.BottomCenter) {
-            OkButton(
-                timerViewModel,
-                timerWithPadVisibility,
-                playButtonVisibility
-            )
-        }
     }
 }
 
